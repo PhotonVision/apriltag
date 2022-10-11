@@ -84,7 +84,7 @@ jobs:
           cmake --build build
         if: matrix.artifact-name == 'Raspbian'
       - run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/ aarch64-bionic-linux-gnu.toolchain.cmake
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/aarch64-bionic-linux-gnu.toolchain.cmake
           cmake --build build
         if: matrix.artifact-name == 'Aarch64'
           
