@@ -1,7 +1,7 @@
 set(GCC_COMPILER_VERSION "" CACHE STRING "GCC Compiler version")
 set(GNU_MACHINE "arm-frc2022-linux-gnueabi" CACHE STRING "GNU compiler triple")
 
-set(SOFTFP no)
+set(SOFTFP yes)
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR arm)
