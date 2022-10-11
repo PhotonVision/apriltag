@@ -78,12 +78,16 @@ jobs:
       - run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
-        if: matrix.artifact-name != 'Raspbian'
+        if: matrix.artifact-name == 'Athena'
       - run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/arm-pi-gnueabihf.toolchain.cmake
           cmake --build build
         if: matrix.artifact-name == 'Raspbian'
-
+      - run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/aarch64-bionic-linux-gnu.toolchain.cmake
+          cmake --build build
+        if: matrix.artifact-name == 'Aarch64'
+          
       # Upload client artifact.
       - uses: actions/upload-artifact@master
         with:
