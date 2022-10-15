@@ -46,7 +46,7 @@ jobs:
       # Zip output to prevent name conflicts
       - run: zip libapriltag-${{ matrix.artifact-name }}.zip build/*.so build/*.dylib
         if: matrix.artifact-name != 'Win64'
-      - run: Compress-Archive build/Release/*.dll release.zip 
+      - run: Compress-Archive build/Release/*.dll libapriltag-${{ matrix.artifact-name }}.zip
         if: matrix.artifact-name == 'Win64'
 
       # Upload client artifact.
