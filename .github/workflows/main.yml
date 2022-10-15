@@ -31,11 +31,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: "Libapriltag - Build - ${{ matrix.artifact-name }}"
     steps:
-      - uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - run: git fetch --tags --force
       - run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
@@ -71,10 +69,9 @@ jobs:
     
     name: "Libapriltag - Build - ${{ matrix.artifact-name }}"
     steps:
-      - uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: git fetch --tags --force
       - run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
@@ -89,7 +86,7 @@ jobs:
         if: matrix.artifact-name == 'Aarch64'
           
       # Upload client artifact.
-      - uses: actions/upload-artifact@v3.1.0
+      - uses: actions/upload-artifact@v3
         with:
           name: apriltag-${{ matrix.artifact-name }}
           path: build/*.so
@@ -98,10 +95,9 @@ jobs:
     needs: [apriltag-build-host, apriltag-build-docker]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3.0.0
-
+      - uses: actions/download-artifact@v3
       - name: Release
-        uses: softprops/action-gh-release@v1.1.0
+        uses: softprops/action-gh-release@v1
         if: github.event_name == 'push'
         with:
           files: |
