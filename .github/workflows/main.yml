@@ -43,14 +43,17 @@ jobs:
           cmake --build build --config Release
         if: matrix.artifact-name == 'Win64'
 
+      # Zip output to prevent name conflicts
+      - run: zip libapriltag-${{ matrix.artifact-name }}.zip build/*.so build/*.dylib
+        if: matrix.artifact-name != 'Win64'
+      - run: Compress-Archive build/Release/*.dll release.zip 
+        if: matrix.artifact-name == 'Win64'
+
       # Upload client artifact.
       - uses: actions/upload-artifact@master
         with:
           name: apriltag-${{ matrix.artifact-name }}
-          path: |
-            build/*.so
-            build/Release/*.dll
-            build/*.dylib
+          path: libapriltag-${{ matrix.artifact-name }}.zip
 
   apriltag-build-docker:
     strategy:
@@ -84,9 +87,12 @@ jobs:
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/aarch64-bionic-linux-gnu.toolchain.cmake
           cmake --build build
         if: matrix.artifact-name == 'Aarch64'
-          
+
+      # Zip output to prevent name conflicts
+      - name: "ZIP Output"
+        run: zip libapriltag-${{ matrix.artifact-name }}.zip build/*.so
+        
       # Upload client artifact.
-      - run: zip libapriltag-${{ matrix.artifact-name }}.zip build/*.so
       - uses: actions/upload-artifact@v3
         with:
           name: apriltag-${{ matrix.artifact-name }}
@@ -105,6 +111,3 @@ jobs:
         with:
           files: |
             **/*.zip
-            **/*.dll
-            **/*.so
-            **/*.dylib
