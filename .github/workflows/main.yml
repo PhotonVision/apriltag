@@ -44,7 +44,7 @@ jobs:
         if: matrix.artifact-name == 'Win64'
 
       # Zip output to prevent name conflicts
-      - run: zip libapriltag-${{ matrix.artifact-name }}.zip build/*.so build/*.dylib
+      - run: zip -j libapriltag-${{ matrix.artifact-name }}.zip build/*.so build/*.dylib
         if: matrix.artifact-name != 'Win64'
       - run: Compress-Archive build/Release/*.dll libapriltag-${{ matrix.artifact-name }}.zip
         if: matrix.artifact-name == 'Win64'
@@ -90,7 +90,7 @@ jobs:
 
       # Zip output to prevent name conflicts
       - name: "ZIP Output"
-        run: zip libapriltag-${{ matrix.artifact-name }}.zip build/*.so
+        run: zip -j libapriltag-${{ matrix.artifact-name }}.zip build/*.so
         
       # Upload client artifact.
       - uses: actions/upload-artifact@v3
