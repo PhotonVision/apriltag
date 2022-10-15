@@ -31,11 +31,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: "Libapriltag - Build - ${{ matrix.artifact-name }}"
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - run: git fetch --tags --force
       - run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build
@@ -45,14 +43,17 @@ jobs:
           cmake --build build --config Release
         if: matrix.artifact-name == 'Win64'
 
+      # Zip output to prevent name conflicts
+      - run: zip -j libapriltag-${{ matrix.artifact-name }}.zip build/*.so build/*.dylib
+        if: matrix.artifact-name != 'Win64'
+      - run: Compress-Archive build/Release/*.dll libapriltag-${{ matrix.artifact-name }}.zip
+        if: matrix.artifact-name == 'Win64'
+
       # Upload client artifact.
       - uses: actions/upload-artifact@master
         with:
           name: apriltag-${{ matrix.artifact-name }}
-          path: |
-            build/*.so
-            build/Release/*.dll
-            build/*.dylib
+          path: libapriltag-${{ matrix.artifact-name }}.zip
 
   apriltag-build-docker:
     strategy:
@@ -71,10 +72,9 @@ jobs:
     
     name: "Libapriltag - Build - ${{ matrix.artifact-name }}"
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - run: git fetch --tags --force
       - run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/arm-frc2022-linux-gnueabi.toolchain.cmake
           cmake --build build
@@ -87,24 +87,27 @@ jobs:
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/aarch64-bionic-linux-gnu.toolchain.cmake
           cmake --build build
         if: matrix.artifact-name == 'Aarch64'
-          
+
+      # Zip output to prevent name conflicts
+      - name: "ZIP Output"
+        run: zip -j libapriltag-${{ matrix.artifact-name }}.zip build/*.so
+        
       # Upload client artifact.
-      - uses: actions/upload-artifact@master
+      - uses: actions/upload-artifact@v3
         with:
           name: apriltag-${{ matrix.artifact-name }}
-          path: build/*.so
+          path: libapriltag-${{ matrix.artifact-name }}.zip
 
   apriltag-release:
     needs: [apriltag-build-host, apriltag-build-docker]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@v2
-
+      - uses: actions/download-artifact@v3
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            **/*.dll
-            **/*.so
-            **/*.dylib
+            **/*.zip
