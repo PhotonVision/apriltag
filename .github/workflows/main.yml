@@ -76,7 +76,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=CMake/arm-frc2022-linux-gnueabi.toolchain.cmake
           cmake --build build
         if: matrix.artifact-name == 'Athena'
       - run: |
