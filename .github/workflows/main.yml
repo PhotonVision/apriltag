@@ -86,6 +86,7 @@ jobs:
         if: matrix.artifact-name == 'Aarch64'
           
       # Upload client artifact.
+      - run: mv build/libapriltag.so libapriltag-${{ matrix.artifact-name }}.so
       - uses: actions/upload-artifact@v3
         with:
           name: apriltag-${{ matrix.artifact-name }}
