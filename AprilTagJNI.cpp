@@ -29,7 +29,8 @@ extern "C"
 {
 
   JNIEXPORT jlong JNICALL Java_org_photonvision_vision_apriltag_AprilTagJNI_AprilTag_1Create(JNIEnv *env,
-                                                                                             jclass cls, jstring jstr, jdouble decimate, jdouble blur, jint threads, jboolean debug, jboolean refine_edges)
+                                                                                             jclass cls, jstring jstr, jdouble decimate, jdouble blur, jint threads, jboolean debug, jboolean refine_edges, jint min_cluster_pixels,
+                                                                                             jint maxErrorBits, jint extraDecisionMargin)
   {
     // Initialize tag detector with options
     apriltag_family_t *tf = NULL;
@@ -92,6 +93,9 @@ extern "C"
     td->nthreads = threads;
     td->debug = debug;
     td->refine_edges = refine_edges;
+    td->qtp.min_cluster_pixels = (int) min_cluster_pixels;
+    td->maxErrorBits = maxErrorBits;
+    td->extraDecisionMargin = extraDecisionMargin;
 
     env->ReleaseStringUTFChars(jstr, famname);
 

@@ -188,6 +188,11 @@ struct apriltag_detector
 
     // Used for thread safety.
     pthread_mutex_t mutex;
+
+    // Photon additions (matt): extra params for max bits corrected,
+    // and extra decision margin
+    int maxErrorBits;
+    int extraDecisionMargin;
 };
 
 // Represents the detection of a tag. These are returned to the user

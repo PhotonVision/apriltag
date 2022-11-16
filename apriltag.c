@@ -916,7 +916,11 @@ static void quad_decode_task(void *_u)
 
             float decision_margin = quad_decode(td, family, im, quad, &entry, task->im_samples);
 
-            if (decision_margin >= 0 && entry.hamming < 255) {
+            if (decision_margin >= 0 && entry.hamming < 255
+                // Additions (Matt/Photon): Check decision margin and hamming
+                && entry.hamming <= td->maxErrorBits
+                && decision_margin >= td->extraDecisionMargin) {
+
                 apriltag_detection_t *det = calloc(1, sizeof(apriltag_detection_t));
 
                 det->family = family;

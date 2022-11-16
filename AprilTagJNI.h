@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;DDIZZ)J
  */
 JNIEXPORT jlong JNICALL Java_org_photonvision_vision_apriltag_AprilTagJNI_AprilTag_1Create
-  (JNIEnv *, jclass, jstring, jdouble, jdouble, jint, jboolean, jboolean);
+  (JNIEnv *, jclass, jstring, jdouble, jdouble, jint, jboolean, jboolean, jint, jint, jint);
 
 JNIEXPORT void JNICALL Java_org_photonvision_vision_apriltag_AprilTagJNI_AprilTag_1Destroy
   (JNIEnv *, jclass, jlong);
